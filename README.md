@@ -11,6 +11,13 @@ Of course, to maximize bundle size reduction, it is important to load a minimum 
 
 This project is based [ionic-team/ionic-angular-standalone-codemods](https://github.com/ionic-team/ionic-angular-standalone-codemods) .
 
+## 💖 Support This Project
+
+Enjoying this project? Your support helps keep it alive and growing!  
+Sponsoring means you directly contribute to new features, improvements, and maintenance.
+
+[Become a Sponsor →](https://github.com/sponsors/rdlabo)
+
 ## Initialize
 
 ```bash
