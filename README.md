@@ -18,6 +18,11 @@ Sponsoring means you directly contribute to new features, improvements, and main
 
 [Become a Sponsor →](https://github.com/sponsors/rdlabo)
 
+## Requirements
+
+- Node.js >= 20
+- ionicons >= 6.0.0
+
 ## Initialize
 
 ```bash
@@ -88,6 +93,14 @@ It is inefficient to run commands each time before running a production build, s
 
 ## Optional
 
+### --dry-run [boolean]
+
+If you want to see what changes would be made without actually writing them to files, set `true`. The default is `false`.
+
+```bash
+npx @rdlabo/ionic-angular-collect-icons --dry-run true
+```
+
 ### --interactive [boolean]
 
 If you want to set all CLI option using the prompts, set `true`. This can be used to check only the results in a Dry run.
@@ -142,7 +155,6 @@ Target files are under the `src` directory from the specified path.
 
 - path/to/project + `src/**/*.ts`
 - path/to/project + `src/**/*.html`
-- path/to/project + `src/**/*.scss`
 
 ### --icon-path [string]
 
@@ -206,9 +218,9 @@ This is to minimize diffs by libraries. I did not like to have every component c
 ## Developing
 
 1. Clone this repository.
-2. Run `pnpm install` to install dependencies
-3. Run `pnpm run dev` to start the dev server, this will watch for changes and rebuild the project
-4. Run `pnpm run start --filter=cli` to start the CLI and test the code mods
+2. Run `npm install` to install dependencies
+3. Run `npm run dev` to start the dev server, this will watch for changes and rebuild the project
+4. Run `npm run start` to start the CLI and test the code mods
 
 ### Testing
 
@@ -216,14 +228,15 @@ This project uses [Vitest](https://vitest.dev/) for unit testing.
 
 | Command               | Description                 |
 | --------------------- | --------------------------- |
-| `pnpm run test`       | Run all tests               |
-| `pnpm run test:watch` | Run all tests in watch mode |
+| `npm run test`        | Run all tests               |
+| `npm run test:watch`  | Run all tests in watch mode |
+| `npm run coverage`    | Run tests with coverage     |
 
 ### Formatting
 
 This project uses [Prettier](https://prettier.io/) for code formatting.
 
-Run `pnpm run format` to format all files in the project.
+Run `npm run fmt` to format all files in the project.
 
 ### Additional Resources
 
