@@ -226,11 +226,11 @@ This is to minimize diffs by libraries. I did not like to have every component c
 
 This project uses [Vitest](https://vitest.dev/) for unit testing.
 
-| Command               | Description                 |
-| --------------------- | --------------------------- |
-| `npm run test`        | Run all tests               |
-| `npm run test:watch`  | Run all tests in watch mode |
-| `npm run coverage`    | Run tests with coverage     |
+| Command              | Description                 |
+| -------------------- | --------------------------- |
+| `npm run test`       | Run all tests               |
+| `npm run test:watch` | Run all tests in watch mode |
+| `npm run coverage`   | Run tests with coverage     |
 
 ### Formatting
 
