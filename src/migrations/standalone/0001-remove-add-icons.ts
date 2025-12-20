@@ -1,4 +1,4 @@
-import { Project } from "ts-morph";
+import { Project, SourceFile } from "ts-morph";
 import { CliOptions } from "../../types/cli-options";
 
 import { saveFileChanges } from "../../utils/log-utils";
@@ -7,6 +7,8 @@ export const removeAddIcons = async (
   project: Project,
   cliOptions: CliOptions,
 ) => {
+  const filesToSave: SourceFile[] = [];
+
   for (const sourceFile of project.getSourceFiles()) {
     const importAddIcons = sourceFile.getImportDeclaration("ionicons");
     if (!importAddIcons) {
@@ -26,13 +28,19 @@ export const removeAddIcons = async (
       continue;
     }
 
+    // パフォーマンス最適化: getFullText()を一度だけ呼び出す
     const addIcons = constructor.getStatements().find((l) => {
-      return l.getFullText().includes("addIcons");
+      const text = l.getFullText();
+      return text.includes("addIcons");
     });
 
     if (addIcons) {
       addIcons.remove();
     }
-    await saveFileChanges(sourceFile, cliOptions);
+    filesToSave.push(sourceFile);
   }
+
+  await Promise.all(
+    filesToSave.map((sourceFile) => saveFileChanges(sourceFile, cliOptions)),
+  );
 };

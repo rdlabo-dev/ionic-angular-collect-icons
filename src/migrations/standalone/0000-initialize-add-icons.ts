@@ -17,9 +17,13 @@ export const initializeAddIcons = async (
     return;
   }
 
+  // パフォーマンス最適化: getFullText()を一度だけ呼び出す
   const enableProdMode = prodModeSource
     .getStatements()
-    .find((source) => source.getFullText().includes("enableProdMode()"));
+    .find((source) => {
+      const text = source.getFullText();
+      return text.includes("enableProdMode()");
+    });
   if (!enableProdMode) {
     // If the project does not base angular standalone structured, do nothing.
     return;
@@ -34,7 +38,8 @@ export const initializeAddIcons = async (
     if (importIconSpecifier) {
       // Remove the addIcons import specifier.
       const addIcons = prodModeSource.getStatements().find((l) => {
-        return l.getFullText().includes("addIcons");
+        const text = l.getFullText();
+        return text.includes("addIcons");
       });
       if (addIcons) {
         // already initialize

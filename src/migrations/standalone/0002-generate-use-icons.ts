@@ -14,52 +14,65 @@ import { kebabCaseToCamelCase } from "../../utils/string-utils";
 import path from "node:path";
 import iconsData from "ionicons/dist/ionicons.json";
 
+// パフォーマンス最適化: モジュールレベルで一度だけ作成
+const IONIC_COMPONENTS_SET = new Set(IONIC_COMPONENTS);
+const ICON_NAME_REGEX = /{{\s*'([^']+)'\s*}}/;
+
 export const generateUseIcons = async (
   project: Project,
   cliOptions: CliOptions,
 ): Promise<boolean> => {
-  const skippedIconsHtmlAll: string[] = [];
-  const ionIconsAll: string[] = [];
-  const sourceIonIcons = iconsData.icons.map((icon) => icon.name);
+  const skippedIconsHtmlAll = new Set<string>();
+  const ionIconsAll = new Set<string>();
+  const sourceIonIcons = new Set(iconsData.icons.map((icon) => icon.name));
 
   for (const sourceFile of project.getSourceFiles()) {
-    if (sourceFile.getFilePath().includes("node_modules")) {
+    const filePath = sourceFile.getFilePath();
+    
+    // node_modulesを早期除外（パス解析を使用）
+    if (filePath.includes("node_modules")) {
       continue;
     }
 
-    if (sourceFile.getFilePath().endsWith(".html")) {
+    if (filePath.endsWith(".html")) {
       const htmlAsString = sourceFile.getFullText();
 
       const { skippedIconsHtml, ionIcons } = detectIonicComponentsAndIcons(
         htmlAsString,
-        sourceFile.getFilePath(),
+        filePath,
       );
-      skippedIconsHtmlAll.push(
-        ...skippedIconsHtml,
-        ...ionIcons.filter((icon) => !sourceIonIcons.includes(icon)),
-      );
-      ionIconsAll.push(
-        ...ionIcons.filter((icon) => sourceIonIcons.includes(icon)),
-      );
-    } else if (sourceFile.getFilePath().endsWith(".ts")) {
+      for (const icon of skippedIconsHtml) {
+        skippedIconsHtmlAll.add(icon);
+      }
+      for (const icon of ionIcons) {
+        if (sourceIonIcons.has(icon)) {
+          ionIconsAll.add(icon);
+        } else {
+          skippedIconsHtmlAll.add(icon);
+        }
+      }
+    } else if (filePath.endsWith(".ts")) {
       const templateAsString = getComponentTemplateAsString(sourceFile);
       if (templateAsString) {
         const { skippedIconsHtml, ionIcons } = detectIonicComponentsAndIcons(
           templateAsString,
-          sourceFile.getFilePath(),
+          filePath,
         );
-        skippedIconsHtmlAll.push(
-          ...skippedIconsHtml,
-          ...ionIcons.filter((icon) => !sourceIonIcons.includes(icon)),
-        );
-        ionIconsAll.push(
-          ...ionIcons.filter((icon) => sourceIonIcons.includes(icon)),
-        );
+        for (const icon of skippedIconsHtml) {
+          skippedIconsHtmlAll.add(icon);
+        }
+        for (const icon of ionIcons) {
+          if (sourceIonIcons.has(icon)) {
+            ionIconsAll.add(icon);
+          } else {
+            skippedIconsHtmlAll.add(icon);
+          }
+        }
       }
     }
   }
 
-  const uniqueSkippedIconsHtmlAll = Array.from(new Set(skippedIconsHtmlAll));
+  const uniqueSkippedIconsHtmlAll = Array.from(skippedIconsHtmlAll);
   uniqueSkippedIconsHtmlAll.sort();
   if (uniqueSkippedIconsHtmlAll.length > 0) {
     console.warn(
@@ -68,7 +81,7 @@ export const generateUseIcons = async (
     );
   }
 
-  const uniqueIonIconsAll = Array.from(new Set(ionIconsAll));
+  const uniqueIonIconsAll = Array.from(ionIconsAll);
   uniqueIonIconsAll.sort();
   const uniqueIconCamelCase = uniqueIonIconsAll.map((ionIcon) =>
     kebabCaseToCamelCase(ionIcon),
@@ -88,8 +101,9 @@ export const generateUseIcons = async (
       /**
        * If the number of exported icons is the same as the number of source icons
        */
+      const exportItemsSet = new Set(exportItems);
       const newIcons = uniqueIconCamelCase.filter(
-        (icon) => !exportItems.includes(icon),
+        (icon) => !exportItemsSet.has(icon),
       );
       if (newIcons.length === 0) {
         console.info(`[Dev] No new icons to add or change to use-icons.ts`);
@@ -122,8 +136,8 @@ function detectIonicComponentsAndIcons(htmlAsString: string, filePath: string) {
   const ast = parse(htmlAsString, { filePath });
   const nodes = ast.templateNodes;
 
-  const ionicComponents: string[] = [];
-  const ionIcons: string[] = [];
+  const ionicComponents = new Set<string>();
+  const ionIcons = new Set<string>();
   const skippedIconsHtml: string[] = [];
 
   let hasRouterLinkWithHref = false;
@@ -137,10 +151,8 @@ function detectIonicComponentsAndIcons(htmlAsString: string, filePath: string) {
     ) {
       const tagName = node.type === "Template" ? node.tagName : node.name;
 
-      if (IONIC_COMPONENTS.includes(tagName)) {
-        if (!ionicComponents.includes(tagName)) {
-          ionicComponents.push(tagName);
-        }
+      if (IONIC_COMPONENTS_SET.has(tagName)) {
+        ionicComponents.add(tagName);
 
         const routerLink =
           node.attributes.find(
@@ -163,9 +175,7 @@ function detectIonicComponentsAndIcons(htmlAsString: string, filePath: string) {
 
           if (staticNameAttribute) {
             const iconName = staticNameAttribute.value;
-            if (!ionIcons.includes(iconName)) {
-              ionIcons.push(iconName);
-            }
+            ionIcons.add(iconName);
           } else {
             const boundNameAttribute = node.inputs.find(
               (a: any) => a.name === attribute,
@@ -174,40 +184,36 @@ function detectIonicComponentsAndIcons(htmlAsString: string, filePath: string) {
             if (boundNameAttribute) {
               const skippedIcon = node.sourceSpan.toString();
 
-              const iconNameRegex = /{{\s*'([^']+)'\s*}}/;
               /**
                * Attempt to find the icon name from the bound name attribute
                * when the developer has a template like this:
                * <ion-icon name="'user'"></ion-icon>
                */
-              const iconNameMatch = skippedIcon.match(iconNameRegex);
+              const iconNameMatch = skippedIcon.match(ICON_NAME_REGEX);
 
               const deepGetIconConditional = (
                 ast: typeof boundNameAttribute.value.ast,
-                icons: string[],
-              ): string[] => {
+                iconsSet: Set<string>,
+              ): void => {
                 if (ast.trueExp.type === "LiteralPrimitive") {
-                  icons.push(ast.trueExp.value);
+                  iconsSet.add(ast.trueExp.value);
                 } else if (ast.trueExp.type === "Conditional") {
-                  deepGetIconConditional(ast.trueExp, icons);
+                  deepGetIconConditional(ast.trueExp, iconsSet);
                 } else {
                   skippedIconsHtml.push(skippedIcon);
                 }
 
                 if (ast.falseExp.type === "LiteralPrimitive") {
-                  icons.push(ast.falseExp.value);
+                  iconsSet.add(ast.falseExp.value);
                 } else if (ast.falseExp.type === "Conditional") {
-                  deepGetIconConditional(ast.falseExp, icons);
+                  deepGetIconConditional(ast.falseExp, iconsSet);
                 } else {
                   skippedIconsHtml.push(skippedIcon);
                 }
-                return icons;
               };
 
               if (iconNameMatch) {
-                if (!ionIcons.includes(iconNameMatch[1])) {
-                  ionIcons.push(iconNameMatch[1]);
-                }
+                ionIcons.add(iconNameMatch[1]);
               } else if (boundNameAttribute.value.ast.type === "Conditional") {
                 deepGetIconConditional(boundNameAttribute.value.ast, ionIcons);
               } else {
@@ -270,8 +276,8 @@ function detectIonicComponentsAndIcons(htmlAsString: string, filePath: string) {
   }
 
   return {
-    ionicComponents,
-    ionIcons,
+    ionicComponents: Array.from(ionicComponents),
+    ionIcons: Array.from(ionIcons),
     skippedIconsHtml,
     hasRouterLinkWithHref,
     hasRouterLink,
