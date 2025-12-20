@@ -7,7 +7,6 @@ import {
   insertIntoDecoratorArgArray,
   deleteFromDecoratorArgArray,
 } from "./decorator-utils";
-import exp from "constants";
 
 describe("getDecoratorArgument", () => {
   it("should return the decorator argument", () => {

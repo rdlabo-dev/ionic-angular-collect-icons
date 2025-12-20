@@ -1,6 +1,5 @@
 import { describe, expect, it } from "vitest";
 import dedent from "ts-dedent";
-import { createTestIconFile } from "./test-helper";
 import { Project } from "ts-morph";
 import { generateUseIcons } from "./0002-generate-use-icons";
 import { cwd } from "node:process";

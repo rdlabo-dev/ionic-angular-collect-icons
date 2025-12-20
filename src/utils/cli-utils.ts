@@ -1,5 +1,5 @@
 import { CliOptions } from "../types/cli-options";
-import { kebabCaseToCamelCase, kebabCaseToPascalCase } from "./string-utils";
+import { kebabCaseToCamelCase } from "./string-utils";
 import * as path from "path";
 
 export function getRelativePath(

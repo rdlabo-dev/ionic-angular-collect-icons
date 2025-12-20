@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest";
 
 import {
-  getAngularNgModuleDecorator,
   getAngularComponentDecorator,
   isAngularComponentClass,
   isAngularComponentStandalone,
