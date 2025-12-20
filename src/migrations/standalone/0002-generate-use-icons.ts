@@ -28,7 +28,7 @@ export const generateUseIcons = async (
 
   for (const sourceFile of project.getSourceFiles()) {
     const filePath = sourceFile.getFilePath();
-    
+
     // node_modulesを早期除外（パス解析を使用）
     if (filePath.includes("node_modules")) {
       continue;

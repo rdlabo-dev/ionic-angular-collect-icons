@@ -18,12 +18,10 @@ export const initializeAddIcons = async (
   }
 
   // パフォーマンス最適化: getFullText()を一度だけ呼び出す
-  const enableProdMode = prodModeSource
-    .getStatements()
-    .find((source) => {
-      const text = source.getFullText();
-      return text.includes("enableProdMode()");
-    });
+  const enableProdMode = prodModeSource.getStatements().find((source) => {
+    const text = source.getFullText();
+    return text.includes("enableProdMode()");
+  });
   if (!enableProdMode) {
     // If the project does not base angular standalone structured, do nothing.
     return;
