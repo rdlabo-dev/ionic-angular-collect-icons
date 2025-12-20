@@ -1,5 +1,5 @@
 import { Project, SourceFile, SyntaxKind } from "ts-morph";
-import { CliOptions } from "../../../types/cli-options";
+import { CliOptions } from "../../types/cli-options";
 import { parse } from "@angular-eslint/template-parser";
 import { getDecoratorArgument } from "../../utils/decorator-utils";
 

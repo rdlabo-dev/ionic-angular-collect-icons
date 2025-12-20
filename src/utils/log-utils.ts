@@ -1,5 +1,5 @@
 import type { SourceFile } from "ts-morph";
-import type { CliOptions } from "../../types/cli-options";
+import type { CliOptions } from "../types/cli-options";
 
 import { log } from "@clack/prompts";
 

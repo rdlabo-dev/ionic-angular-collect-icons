@@ -15,8 +15,8 @@ import { Project } from "ts-morph";
 import { existsSync } from "node:fs";
 
 import { cwd } from "node:process";
-import { runStandaloneMigration } from "./angular/migrations/standalone";
-import { getOptionsFromArgv } from "./angular/utils/cli-utils";
+import { runStandaloneMigration } from "./migrations/standalone";
+import { getOptionsFromArgv } from "./utils/cli-utils";
 import { CliOptions } from "./types/cli-options";
 
 const IONIC_REPOSITORY_ISSUES_URL =

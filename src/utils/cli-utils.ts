@@ -1,4 +1,4 @@
-import { CliOptions } from "../../types/cli-options";
+import { CliOptions } from "../types/cli-options";
 import { kebabCaseToCamelCase, kebabCaseToPascalCase } from "./string-utils";
 import * as path from "path";
 

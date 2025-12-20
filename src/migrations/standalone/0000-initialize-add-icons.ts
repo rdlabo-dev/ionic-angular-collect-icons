@@ -1,5 +1,5 @@
 import { Project } from "ts-morph";
-import { CliOptions } from "../../../types/cli-options";
+import { CliOptions } from "../../types/cli-options";
 
 import { saveFileChanges } from "../../utils/log-utils";
 import { addImportToFile } from "../../utils/typescript-utils";

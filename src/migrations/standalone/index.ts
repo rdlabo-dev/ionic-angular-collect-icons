@@ -1,5 +1,5 @@
 import type { Project } from "ts-morph";
-import type { CliOptions } from "../../../types/cli-options";
+import type { CliOptions } from "../../types/cli-options";
 import { removeAddIcons } from "./0001-remove-add-icons";
 import { generateUseIcons } from "./0002-generate-use-icons";
 
