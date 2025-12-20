@@ -24,7 +24,7 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
 
       - name: Update npm
-        run: npm install -g npm@latest pnpm
+        run: npm install -g npm@latest
 
       - name: Extract version from tag
         id: tag_version
@@ -36,10 +36,10 @@ jobs:
           echo "Extracted version: $VERSION from tag: $TAG_NAME"
 
       - name: Install dependencies
-        run: pnpm install
+        run: npm install
 
       - name: Build workspaces
-        run: pnpm run build
+        run: npm run build
 
       - name: Publish packages
         run: |
@@ -47,7 +47,6 @@ jobs:
           IS_STABLE=$(echo "$VERSION" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$' && echo true || echo false)
           
           echo "Publishing... $IS_STABLE"
-          cd packages/cli
           if [ "$IS_STABLE" = "true" ]; then
             npm publish --provenance --access public
           else
