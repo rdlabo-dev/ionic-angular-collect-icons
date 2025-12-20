@@ -16,7 +16,7 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "test": "turbo run test --filter='./packages/*' --no-daemon",
     "test:watch": "turbo run test:watch --filter='./packages/*' --no-daemon",
-    "release": "pnpm install && pnpm run test && np --no-cleanup --no-tests --no-publish && node release.mjs"
+    "release": "pnpm install && pnpm run test && np --no-cleanup --no-tests --no-publish"
   },
   "devDependencies": {
     "child_process": "^1.0.2",
