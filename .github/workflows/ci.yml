@@ -22,11 +22,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: pnpm/action-setup@v2
       - uses: actions/setup-node@v3
         with:
           node-version: 18
-          cache: "pnpm"
-      - if: ${{ steps.cache-node.outputs.cache-hit != 'true' }}
-        run: pnpm install
-      - run: pnpm run test
+          cache: "npm"
+      - run: npm ci
+      - run: npm test
