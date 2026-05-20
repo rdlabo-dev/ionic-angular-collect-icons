@@ -243,10 +243,17 @@ function detectIonicComponentsAndIcons(htmlAsString: string, filePath: string) {
         recursivelyFindIonicComponents(childNode);
       }
     } else if (node.type === "SwitchBlock") {
-      for (const c of node.cases) {
-        for (const childNode of c.children) {
+      // Angular 640693d: consecutive @case blocks → SwitchBlock.groups (SwitchBlockCaseGroup[])
+      // older AST: SwitchBlock.cases (SwitchBlockCase[])
+      const switchBranches = node.groups ?? node.cases ?? [];
+      for (const branch of switchBranches) {
+        for (const childNode of branch.children ?? []) {
           recursivelyFindIonicComponents(childNode);
         }
+      }
+    } else if (node.type === "SwitchBlockCaseGroup") {
+      for (const childNode of node.children ?? []) {
+        recursivelyFindIonicComponents(childNode);
       }
     } else if (node.type === "DeferredBlock") {
       if (node.children) {
