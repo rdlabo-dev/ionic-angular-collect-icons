@@ -3,10 +3,10 @@
   "version": "2.1.0",
   "repository": {
     "type": "git",
-    "url": "git@github.com:rdlabo-team/ionic-angular-collect-icons.git"
+    "url": "git@github.com:rdlabo-dev/ionic-angular-collect-icons.git"
   },
   "bugs": {
-    "url": "git@github.com:rdlabo-team/ionic-angular-collect-icons.git/issues"
+    "url": "git@github.com:rdlabo-dev/ionic-angular-collect-icons.git/issues"
   },
   "private": false,
   "main": "./dist/index.js",

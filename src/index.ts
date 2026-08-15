@@ -20,7 +20,7 @@ import { getOptionsFromArgv } from "./utils/cli-utils";
 import { CliOptions } from "./types/cli-options";
 
 const IONIC_REPOSITORY_ISSUES_URL =
-  "https://github.com/rdlabo-team/ionic-angular-collect-icons/issues";
+  "https://github.com/rdlabo-dev/ionic-angular-collect-icons/issues";
 
 const cliOptions = getOptionsFromArgv(process.argv);
 
