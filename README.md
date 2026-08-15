@@ -1,5 +1,7 @@
 # Ionic Angular Collect Icons
 
+**Documentation:** [Read the full documentation](https://docs.rdlabo.dev/projects/ionic-angular-collect-icons)
+
 ## What is this?
 
 This library is used to uniquely group the ionIcons in a project, and generate for export ionIcons file. In small projects, it is difficult to manage `addIcons()` of ionIcons each time, so we automated it.
@@ -10,13 +12,6 @@ This library is used to uniquely group the ionIcons in a project, and generate f
 Of course, to maximize bundle size reduction, it is important to load a minimum number of icons at each Component lazy loading. This is a compromise to speed up development.
 
 This project is based [ionic-team/ionic-angular-standalone-codemods](https://github.com/ionic-team/ionic-angular-standalone-codemods) .
-
-## 💖 Support This Project
-
-Enjoying this project? Your support helps keep it alive and growing!  
-Sponsoring means you directly contribute to new features, improvements, and maintenance.
-
-[Become a Sponsor →](https://github.com/sponsors/rdlabo)
 
 ## Requirements
 
