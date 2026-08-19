@@ -14,7 +14,8 @@
   "types": "./dist/index.d.ts",
   "bin": "./dist/index.js",
   "files": [
-    "dist"
+    "dist",
+    "docs"
   ],
   "scripts": {
     "start": "jiti ./src/index.ts",
