@@ -1,4 +1,4 @@
-Flags for `npx @rdlabo/ionic-angular-collect-icons`. The compact table is on the [CLI API](/docs/api) page.
+Flags for `npx @rdlabo/ionic-angular-collect-icons`. The compact table is on the [CLI API](https://docs.rdlabo.dev/projects/ionic-angular-collect-icons/docs/api) page.
 
 ### --dry-run [boolean]
 
