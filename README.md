@@ -1,8 +1,10 @@
 # @rdlabo/ionic-angular-collect-icons
 
 <!-- rdlabo-docs-omit -->
+
 [![npm version](https://badge.fury.io/js/@rdlabo%2Fionic-angular-collect-icons.svg)](https://badge.fury.io/js/@rdlabo%2Fionic-angular-collect-icons)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 <!-- /rdlabo-docs-omit -->
 
 ## What is this?
@@ -20,7 +22,6 @@ This project is based [ionic-team/ionic-angular-standalone-codemods](https://git
 
 - Node.js >= 20
 - ionicons >= 6.0.0
-
 
 ## Quick start
 
@@ -48,9 +49,11 @@ Start with [Installation](#installation), then [Initialize](./docs/initialize.md
 - [FAQ](./docs/faq.md) — tests, binding, and `main.ts`.
 
 <!-- rdlabo-docs-omit -->
+
 **Full documentation:** [https://docs.rdlabo.dev/projects/ionic-angular-collect-icons](https://docs.rdlabo.dev/projects/ionic-angular-collect-icons)
 
 ## License
 
 This project is licensed under the [MIT License](./LICENSE).
+
 <!-- /rdlabo-docs-omit -->
