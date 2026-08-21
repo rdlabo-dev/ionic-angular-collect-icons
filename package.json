@@ -27,7 +27,7 @@
     "lint": "eslint .",
     "fmt": "prettier --write \"**/*.{ts,tsx,md}\"",
     "prepublishOnly": "npm run build",
-    "release": "np --no-tests --no-publish --any-branch"
+    "release": "np --no-tests --no-publish"
   },
   "dependencies": {
     "@angular-eslint/template-parser": "^21.0.0",
