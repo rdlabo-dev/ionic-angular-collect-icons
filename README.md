@@ -21,7 +21,10 @@ This project is based [ionic-team/ionic-angular-standalone-codemods](https://git
 ## Requirements
 
 - Node.js >= 20
-- ionicons >= 6.0.0
+- Ionic Angular >= 9.0.0
+- Angular >= 18.0.0
+- TypeScript >= 5.4.0
+- ionicons >= 8.0.0
 
 ## Quick start
 
@@ -32,6 +35,19 @@ npx @rdlabo/ionic-angular-collect-icons --initialize true
 ```
 
 Details: [Initialize](./docs/initialize.md) and [Usage](./docs/usage.md).
+
+## Migrating from Ionic Angular 8
+
+Commit the consuming application's current changes, then run Ionic's official
+migration tool from the application root:
+
+```bash
+npx @ionic/migrate
+```
+
+It applies safe automatic changes and reports items that require manual review.
+After it finishes, update this package and follow the
+[Ionic Angular 9 migration guide](./docs/migration.md) for the remaining checks.
 
 ## Installation
 
@@ -45,6 +61,7 @@ Start with [Installation](#installation), then [Initialize](./docs/initialize.md
 
 - [Initialize](./docs/initialize.md) — wire `addIcons` automatically or by hand.
 - [Usage](./docs/usage.md) — run the collector before production builds.
+- [Migration](./docs/migration.md) — migrate an existing project to Ionic Angular 9.
 - [CLI Options](./docs/options.md) — `--dry-run`, `--initialize`, paths.
 - [FAQ](./docs/faq.md) — tests, binding, and `main.ts`.
 
