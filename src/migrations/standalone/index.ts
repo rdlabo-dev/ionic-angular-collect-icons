@@ -26,6 +26,11 @@ interface StandaloneMigrationOptions {
   spinner: ReturnType<typeof spinner>;
 }
 
+export const isSupportedIonicVersion = (version: string): boolean => {
+  const match = /^(0|[1-9]\d*)\./.exec(version);
+  return match !== null && Number(match[1]) >= 9;
+};
+
 export const runStandaloneMigration = async ({
   project,
   cliOptions,
@@ -57,25 +62,23 @@ export const runStandaloneMigration = async ({
 };
 
 /**
- * Verifies that the installed version of @ionic/angular is at least 7.5.0.
+ * Verifies that the installed version of @ionic/angular is at least 9.0.0.
  * If the version cannot be detected, the user is prompted to continue.
- * If the version is less than 7.5.0, the user is prompted to install the latest version.
+ * If the version is less than 9.0.0, the migration is canceled.
  * @param dir The directory of the project to be migrated.
- * @returns True if the installed version of @ionic/angular is at least 7.5.0 or the user opted to continue, false otherwise.
+ * @returns True if the installed version of @ionic/angular is at least 9.0.0 or the user opted to continue, false otherwise.
  */
-async function checkInstalledIonicVersion(dir: string) {
-  const ionicAngularVersion = await getActualPackageVersion(
-    dir,
-    "@ionic/angular",
-  );
+export async function checkInstalledIonicVersion(
+  dir: string,
+  getVersion = getActualPackageVersion,
+) {
+  const ionicAngularVersion = await getVersion(dir, "@ionic/angular");
 
   if (!ionicAngularVersion) {
     log.warn(
       "We could not detect the version of @ionic/angular installed in your project.",
     );
-    log.warn(
-      "This migration requires @ionic/angular version of 7.5.0 or later.",
-    );
+    log.warn("This migration requires @ionic/angular version 9.0.0 or later.");
     log.warn("Do you want to proceed anyway?");
 
     const { continue: shouldContinue } = await group({
@@ -91,25 +94,15 @@ async function checkInstalledIonicVersion(dir: string) {
       return false;
     }
   } else {
-    const [major, minor] = ionicAngularVersion.split(".");
-    const majorVersion = parseInt(major);
-    const minorVersion = parseInt(minor);
-
     const logVersionError = () => {
       log.error(
-        "This migration requires an @ionic/angular version of v7.5.0 or greater.",
+        "This migration requires @ionic/angular version 9.0.0 or later.",
       );
       log.error("Install the latest version of @ionic/angular and try again.");
       log.error("Migration canceled.");
     };
 
-    if (majorVersion < 7) {
-      logVersionError();
-      return false;
-    }
-
-    // only need to add if is major v7 then compare with minor 5.
-    if (majorVersion == 7 && minorVersion < 5) {
+    if (!isSupportedIonicVersion(ionicAngularVersion)) {
       logVersionError();
       return false;
     }

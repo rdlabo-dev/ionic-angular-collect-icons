@@ -85,14 +85,14 @@ async function main() {
   project.addSourceFilesAtPaths([
     `${cli.projectPath}/src/**/*.html`,
     `${cli.projectPath}/src/**/*.ts`,
-    `./angular.json`,
+    `${cli.projectPath}/angular.json`,
   ]);
 
   try {
     await runStandaloneMigration({
       project,
       cliOptions: cli,
-      dir: cwd(),
+      dir: cli.projectPath,
       spinner: s,
     });
   } catch (e: any) {
