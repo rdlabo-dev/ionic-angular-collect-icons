@@ -134,34 +134,31 @@ export function addExportToFile(
   importName: string | string[],
   moduleSpecifier: string,
 ) {
-  const addExport = (
-    sourceFile: SourceFile,
-    importName: string,
-    moduleSpecifier: string,
-  ) => {
-    let exportDeclaration = sourceFile.getExportDeclaration(moduleSpecifier);
+  const names = Array.isArray(importName) ? importName : [importName];
+  if (names.length === 0) {
+    return;
+  }
 
-    if (!exportDeclaration) {
-      // Create the import declaration if it does not exist.
-      exportDeclaration = sourceFile.addExportDeclaration({
-        moduleSpecifier,
-      });
-    }
+  let exportDeclaration = sourceFile.getExportDeclaration(moduleSpecifier);
 
-    const importSpecifier = exportDeclaration
+  if (!exportDeclaration) {
+    exportDeclaration = sourceFile.addExportDeclaration({ moduleSpecifier });
+  }
+
+  const existingNames = new Set(
+    exportDeclaration
       .getNamedExports()
-      .find((n) => n.getName() === importName);
-
-    if (!importSpecifier) {
-      exportDeclaration.addNamedExport(importName);
+      .map((namedExport) => namedExport.getName()),
+  );
+  const namesToAdd = names.filter((name) => {
+    if (existingNames.has(name)) {
+      return false;
     }
-  };
+    existingNames.add(name);
+    return true;
+  });
 
-  if (Array.isArray(importName)) {
-    importName.forEach((name) => {
-      addExport(sourceFile, name, moduleSpecifier);
-    });
-  } else {
-    addExport(sourceFile, importName, moduleSpecifier);
+  if (namesToAdd.length > 0) {
+    exportDeclaration.addNamedExports(namesToAdd);
   }
 }

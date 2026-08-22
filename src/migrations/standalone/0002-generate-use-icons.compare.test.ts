@@ -139,5 +139,30 @@ describe("migrateComponents", () => {
 
       expect(result).toBe(false);
     });
+
+    it("preserves manual exports when only dynamic icons are used", async () => {
+      const project = new Project({ useInMemoryFileSystem: true });
+      project.createSourceFile(
+        "foo.component.html",
+        `<ion-icon [name]="currentIcon"></ion-icon>`,
+      );
+      const useIconFile = project.createSourceFile(
+        "use-icons.ts",
+        dedent(`export { closeOutline } from "ionicons/icons";`),
+      );
+
+      const result = await generateUseIcons(project, {
+        dryRun: false,
+        iconPath: "src/use-icons.ts",
+        projectPath: cwd(),
+        interactive: false,
+        initialize: false,
+      });
+
+      expect(result).toBe(false);
+      expect(useIconFile.getText()).toBe(
+        `export { closeOutline } from "ionicons/icons";`,
+      );
+    });
   });
 });

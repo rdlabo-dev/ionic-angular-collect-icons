@@ -16,7 +16,9 @@ import iconsData from "ionicons/dist/ionicons.json";
 
 // パフォーマンス最適化: モジュールレベルで一度だけ作成
 const IONIC_COMPONENTS_SET = new Set(IONIC_COMPONENTS);
+const SOURCE_ION_ICONS = new Set(iconsData.icons.map((icon) => icon.name));
 const ICON_NAME_REGEX = /{{\s*'([^']+)'\s*}}/;
+const ION_ICON_TAG = "<ion-icon";
 
 export const generateUseIcons = async (
   project: Project,
@@ -24,8 +26,6 @@ export const generateUseIcons = async (
 ): Promise<boolean> => {
   const skippedIconsHtmlAll = new Set<string>();
   const ionIconsAll = new Set<string>();
-  const sourceIonIcons = new Set(iconsData.icons.map((icon) => icon.name));
-
   for (const sourceFile of project.getSourceFiles()) {
     const filePath = sourceFile.getFilePath();
 
@@ -37,6 +37,10 @@ export const generateUseIcons = async (
     if (filePath.endsWith(".html")) {
       const htmlAsString = sourceFile.getFullText();
 
+      if (!htmlAsString.includes(ION_ICON_TAG)) {
+        continue;
+      }
+
       const { skippedIconsHtml, ionIcons } = detectIonicComponentsAndIcons(
         htmlAsString,
         filePath,
@@ -45,7 +49,7 @@ export const generateUseIcons = async (
         skippedIconsHtmlAll.add(icon);
       }
       for (const icon of ionIcons) {
-        if (sourceIonIcons.has(icon)) {
+        if (SOURCE_ION_ICONS.has(icon)) {
           ionIconsAll.add(icon);
         } else {
           skippedIconsHtmlAll.add(icon);
@@ -53,7 +57,7 @@ export const generateUseIcons = async (
       }
     } else if (filePath.endsWith(".ts")) {
       const templateAsString = getComponentTemplateAsString(sourceFile);
-      if (templateAsString) {
+      if (templateAsString?.includes(ION_ICON_TAG)) {
         const { skippedIconsHtml, ionIcons } = detectIonicComponentsAndIcons(
           templateAsString,
           filePath,
@@ -62,7 +66,7 @@ export const generateUseIcons = async (
           skippedIconsHtmlAll.add(icon);
         }
         for (const icon of ionIcons) {
-          if (sourceIonIcons.has(icon)) {
+          if (SOURCE_ION_ICONS.has(icon)) {
             ionIconsAll.add(icon);
           } else {
             skippedIconsHtmlAll.add(icon);
