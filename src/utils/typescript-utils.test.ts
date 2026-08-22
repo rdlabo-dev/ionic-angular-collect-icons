@@ -4,9 +4,39 @@ import { dedent } from "ts-dedent";
 
 import {
   getOrCreateConstructor,
+  addExportToFile,
   addImportToClass,
   removeImportFromClass,
 } from "./typescript-utils";
+
+describe("addExportToFile", () => {
+  it("does nothing when given an empty list", () => {
+    const project = new Project({ useInMemoryFileSystem: true });
+    const sourceFile = project.createSourceFile("foo.ts", "");
+
+    addExportToFile(sourceFile, [], "ionicons/icons");
+
+    expect(sourceFile.getText()).toBe("");
+  });
+
+  it("adds multiple exports in order without duplicates", () => {
+    const project = new Project({ useInMemoryFileSystem: true });
+    const sourceFile = project.createSourceFile(
+      "foo.ts",
+      `export { closeOutline } from "ionicons/icons";`,
+    );
+
+    addExportToFile(
+      sourceFile,
+      ["closeOutline", "logoIonic", "logoIonic", "addOutline"],
+      "ionicons/icons",
+    );
+
+    expect(sourceFile.getText()).toBe(
+      `export { closeOutline, logoIonic, addOutline } from "ionicons/icons";`,
+    );
+  });
+});
 
 describe("getOrCreateConstructor", () => {
   it("should return the existing constructor", () => {
