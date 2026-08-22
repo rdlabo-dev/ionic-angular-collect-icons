@@ -12,7 +12,7 @@ This version targets Ionic Angular 9 and follows the
 - Capacitor 7 or later for native applications
 - TypeScript 5.4 or later
 - Ionicons 8 or later
-- Node.js 20 or later
+- Node.js 22 or later
 
 ### Run the official migrator
 
@@ -46,7 +46,7 @@ npm install --save-dev @rdlabo/ionic-angular-collect-icons@latest
 The remaining sections explain the important Ionic Angular 9 changes to verify
 in the generated diff and in the migrator's manual-review checklist.
 
-### Update standalone imports
+### Complete the standalone migration
 
 Ionic 9 exports standalone Angular components from `@ionic/angular`. Replace
 the Ionic 8 standalone entry point:
@@ -56,30 +56,30 @@ the Ionic 8 standalone entry point:
 + import { IonApp, IonIcon, provideIonicAngular } from '@ionic/angular';
 ```
 
-Lazy-loaded Ionic components now use `@ionic/angular/lazy` instead of the
-package root:
+The official migrator may move NgModule imports to `@ionic/angular/lazy` to
+preserve the application's architecture during the framework upgrade. Treat
+that as an intermediate state, not the standalone destination. Complete the
+Angular standalone migration, then import each Ionic component from
+`@ionic/angular`. Do not mechanically rewrite `/lazy` imports before their
+NgModule consumers have been converted.
+
+### Replace `IonicModule` after the standalone migration
+
+`IonicModule` is deprecated in Ionic 9, but removing it requires
+application-level architectural changes. Convert the application to standalone
+bootstrap, move the Ionic configuration to `provideIonicAngular()`, and import
+the standalone Ionic components used by each consumer:
 
 ```diff
-- import { IonModal } from '@ionic/angular';
-+ import { IonModal } from '@ionic/angular/lazy';
+- platformBrowserDynamic().bootstrapModule(AppModule);
++ bootstrapApplication(AppComponent, {
++   providers: [provideIonicAngular(config)],
++ });
 ```
 
-Only use the lazy entry point when the application intentionally uses Ionic's
-lazy-loaded component proxies. Regular standalone Angular components should be
-imported from `@ionic/angular`.
-
-### Replace `IonicModule`
-
-`IonicModule` remains functional in Ionic 9 but is deprecated. Use
-`provideIonicAngular()` for new and migrated applications. In an NgModule-based
-application, move the Ionic configuration from `imports` to `providers`:
-
-```diff
- @NgModule({
--  imports: [IonicModule.forRoot(config)],
-+  providers: [provideIonicAngular(config)],
- })
-```
+Import `provideIonicAngular` from `@ionic/angular`. Do not replace
+`IonicModule.forRoot()` with a one-line provider change inside the same
+NgModule; finish the NgModule-to-standalone migration first.
 
 ### Use exports-aware module resolution
 
