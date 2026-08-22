@@ -20,11 +20,12 @@ This project is based [ionic-team/ionic-angular-standalone-codemods](https://git
 
 ## Requirements
 
-- Node.js >= 20
+- Node.js >= 22
 - Ionic Angular >= 9.0.0
 - Angular >= 18.0.0
 - TypeScript >= 5.4.0
 - ionicons >= 8.0.0
+- @angular-eslint/template-parser 21 or 22
 
 ## Quick start
 
@@ -52,8 +53,14 @@ After it finishes, update this package and follow the
 ## Installation
 
 ```bash
-npm install @rdlabo/ionic-angular-collect-icons --save-dev
+npm install --save-dev \
+  @rdlabo/ionic-angular-collect-icons \
+  @angular-eslint/template-parser@^21
 ```
+
+Use `@angular-eslint/template-parser@^22` instead when the consuming project
+uses Angular ESLint 22. The parser is a peer dependency so the collector uses
+the same Angular template parser major as the consuming project.
 
 ## Documentation
 
