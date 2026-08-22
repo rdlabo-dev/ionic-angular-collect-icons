@@ -21,10 +21,54 @@ jobs:
     name: Unit Test
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 22
           cache: "npm"
       - run: npm ci
       - run: npm test
+
+  template-parser-compatibility:
+    name: Template parser ${{ matrix.template-parser }} compatibility
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - template-parser: "21.4.0"
+            eslint: "8.57.1"
+          - template-parser: "22.1.0"
+            eslint: "9.39.2"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: "npm"
+      - run: npm ci
+      - run: npm run build
+      - name: Pack the published files
+        id: pack
+        run: |
+          filename=$(npm pack --pack-destination "$RUNNER_TEMP" --json | node -e "let input=''; process.stdin.on('data', chunk => input += chunk); process.stdin.on('end', () => console.log(JSON.parse(input)[0].filename));")
+          echo "filename=$filename" >> "$GITHUB_OUTPUT"
+      - name: Install in a clean consumer project
+        working-directory: ${{ runner.temp }}
+        run: |
+          mkdir consumer
+          cd consumer
+          npm init --yes
+          npm install \
+            eslint@${{ matrix.eslint }} \
+            @angular-eslint/template-parser@${{ matrix.template-parser }} \
+            "$RUNNER_TEMP/${{ steps.pack.outputs.filename }}"
+      - name: Run the packaged CLI
+        working-directory: ${{ runner.temp }}/consumer
+        run: |
+          mkdir -p node_modules/@ionic/angular src
+          printf '{"version":"9.0.0"}\n' > node_modules/@ionic/angular/package.json
+          printf '{"compilerOptions":{}}\n' > tsconfig.json
+          printf '<ion-icon name="close-outline"></ion-icon>\n' > src/app.component.html
+          npx --no-install ionic-angular-collect-icons
+          grep -q 'closeOutline' src/use-icons.ts

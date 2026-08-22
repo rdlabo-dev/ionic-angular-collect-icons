@@ -19,7 +19,7 @@
   ],
   "scripts": {
     "start": "jiti ./src/index.ts",
-    "build": "tsup src/index.ts --format cjs,esm --dts",
+    "build": "tsup src/index.ts --format cjs,esm --dts --target node22",
     "dev": "npm run build --watch",
     "test": "vitest run",
     "test:watch": "vitest",
@@ -30,7 +30,6 @@
     "release": "np --no-tests --no-publish"
   },
   "dependencies": {
-    "@angular-eslint/template-parser": "^21.0.0",
     "@clack/core": "^0.5.0",
     "@clack/prompts": "^0.11.0",
     "@ionic/utils-terminal": "^2.3.5",
@@ -40,7 +39,8 @@
     "ts-morph": "^26.0.0"
   },
   "devDependencies": {
-    "@types/node": "^18.19.28",
+    "@angular-eslint/template-parser": "^21.0.0",
+    "@types/node": "^22.0.0",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
     "@vitest/coverage-v8": "^0.34.6",
@@ -52,7 +52,10 @@
     "typescript": "^5.9.0",
     "vitest": "^0.34.6"
   },
+  "peerDependencies": {
+    "@angular-eslint/template-parser": "^21.0.0 || ^22.0.0"
+  },
   "engines": {
-    "node": ">=20"
+    "node": ">=22"
   }
 }
