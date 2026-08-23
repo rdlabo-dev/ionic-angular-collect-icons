@@ -76,6 +76,10 @@ Start with [Installation](#installation), then [Initialize](./docs/initialize.md
 
 **Full documentation:** [https://docs.rdlabo.dev/projects/ionic-angular-collect-icons](https://docs.rdlabo.dev/projects/ionic-angular-collect-icons)
 
+## Maintainers
+
+- [rdlabo](https://rdlabo.dev/)
+
 ## License
 
 This project is licensed under the [MIT License](./LICENSE).
