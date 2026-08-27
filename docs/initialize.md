@@ -41,10 +41,12 @@ This will generate `src/use-icons.ts`.
 development builds it then loads the complete Ionicons catalog; Angular removes
 that development-only import from optimized production builds.
 
-Running the collector also migrates the ternary initializer emitted by older
-releases, even when `--initialize` is omitted. Existing custom `addIcons(...)`
-calls are left unchanged. See [Migration](./migration.md#upgrade-the-icon-initializer)
-for the exact matching rules.
+When an interactive collector run detects the ternary initializer emitted by
+older releases, it asks whether to migrate it. The default answer is **Yes**.
+Selecting **No** leaves the initializer unchanged. Existing custom
+`addIcons(...)` calls are also left unchanged. See
+[Migration](./migration.md#upgrade-the-icon-initializer) for preview,
+non-interactive, and matching details.
 
 #### 3. Remove other `addIcons` calls in class constructor
 

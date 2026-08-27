@@ -107,7 +107,7 @@ const getLegacyInitializer = (
     if (isLegacyTernaryCall(call)) {
       return hasNamespaceImport(sourceFile, "ionicons/icons", "allIcons");
     }
-    return cliOptions.initialize && isCallWithUseIcons(call, "addIcons");
+    return cliOptions.migrate === true && isCallWithUseIcons(call, "addIcons");
   });
 };
 
@@ -170,6 +170,12 @@ export const initializeAddIcons = async (
 
   const legacyInitializer = getLegacyInitializer(prodModeSource, cliOptions);
   if (legacyInitializer) {
+    if (cliOptions.migrate === false) {
+      return "declined" as const;
+    }
+    if (cliOptions.migrate !== true) {
+      return "permission-required" as const;
+    }
     const useIconsImport = getGeneratedUseIconsImport(
       prodModeSource,
       cliOptions,
@@ -200,7 +206,8 @@ export const initializeAddIcons = async (
     }
     addImportToFile(prodModeSource, "initializeIonicons", RUNTIME_MODULE);
     legacyInitializer.replaceWithText("void initializeIonicons(useIcons);");
-    return await saveFileChanges(prodModeSource, cliOptions, { format: false });
+    await saveFileChanges(prodModeSource, cliOptions, { format: false });
+    return "changed" as const;
   }
 
   if (!cliOptions.initialize) {
@@ -246,5 +253,6 @@ export const initializeAddIcons = async (
     `void initializeIonicons(useIcons);`,
   );
 
-  return await saveFileChanges(prodModeSource, cliOptions, { format: false });
+  await saveFileChanges(prodModeSource, cliOptions, { format: false });
+  return "changed" as const;
 };
