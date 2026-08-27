@@ -37,9 +37,9 @@ This will generate `src/use-icons.ts`.
 +  void initializeIonicons(useIcons);
 ```
 
-`initializeIonicons` registers the collected icons synchronously. In Angular
-development builds it then loads the complete Ionicons catalog; Angular removes
-that development-only import from optimized production builds.
+`initializeIonicons` registers the collected icons synchronously. Angular's
+`isDevMode()` then enables the complete catalog from an isolated lazy bundle in
+development. Production starts without downloading that catalog bundle.
 
 When an interactive collector run detects the ternary initializer emitted by
 older releases, it asks whether to migrate it. The default answer is **Yes**.

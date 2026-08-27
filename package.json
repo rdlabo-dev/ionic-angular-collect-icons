@@ -47,6 +47,7 @@
     "start": "jiti ./src/index.ts",
     "build": "tsup",
     "dev": "tsup --watch",
+    "pretest": "npm run build",
     "test": "vitest run",
     "test:watch": "vitest",
     "coverage": "vitest run --coverage",
@@ -66,6 +67,7 @@
   },
   "devDependencies": {
     "@angular-eslint/template-parser": "^21.0.0",
+    "@angular/core": "^21.0.0",
     "@types/node": "^22.0.0",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
@@ -80,7 +82,8 @@
     "vitest": "^0.34.6"
   },
   "peerDependencies": {
-    "@angular-eslint/template-parser": "^21.0.0 || ^22.0.0"
+    "@angular-eslint/template-parser": "^21.0.0 || ^22.0.0",
+    "@angular/core": ">=18.0.0 <23.0.0"
   },
   "engines": {
     "node": ">=22"
