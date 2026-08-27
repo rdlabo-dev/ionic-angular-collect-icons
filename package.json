@@ -13,6 +13,31 @@
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./runtime": {
+      "types": "./dist/runtime.d.ts",
+      "import": "./dist/runtime.mjs",
+      "require": "./dist/runtime.js"
+    },
+    "./dist/index": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./dist/runtime": {
+      "types": "./dist/runtime.d.ts",
+      "import": "./dist/runtime.mjs",
+      "require": "./dist/runtime.js"
+    },
+    "./dist/*": "./dist/*",
+    "./docs/*": "./docs/*",
+    "./package.json": "./package.json"
+  },
   "bin": "./dist/index.js",
   "files": [
     "dist",
@@ -20,8 +45,8 @@
   ],
   "scripts": {
     "start": "jiti ./src/index.ts",
-    "build": "tsup src/index.ts --format cjs,esm --dts --target node22",
-    "dev": "npm run build --watch",
+    "build": "tsup",
+    "dev": "tsup --watch",
     "test": "vitest run",
     "test:watch": "vitest",
     "coverage": "vitest run --coverage",
@@ -45,6 +70,7 @@
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
     "@vitest/coverage-v8": "^0.34.6",
+    "esbuild": "0.24.2",
     "eslint": "^8.57.0",
     "jiti": "^1.21.0",
     "np": "^10.2.0",
