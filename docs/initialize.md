@@ -1,12 +1,12 @@
 Install the CLI and wire icon registration. See also [Usage](./usage.md).
 
 ```bash
-npm install @rdlabo/ionic-angular-collect-icons
+npm install --save-dev @rdlabo/ionic-angular-collect-icons
 ```
 
-Install the collector as an application dependency because the generated
-application code imports its browser runtime. Build environments must also
-install the package before compiling the application.
+The generated application code imports the package's browser runtime, so build
+environments must install development dependencies before compiling the
+application. The runtime is then bundled into the application output.
 
 ### 🤖 Automatic Configuration
 

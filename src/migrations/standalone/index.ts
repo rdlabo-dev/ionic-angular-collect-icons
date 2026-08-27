@@ -78,14 +78,17 @@ export const runStandaloneMigration = async ({
     return false;
   }
 
-  await migrateInitializerWithConsent({
+  const initializerResult = await migrateInitializerWithConsent({
     project,
     cliOptions,
     confirmInitializerMigration,
   });
 
   spinner.start(`Migrating project located at: ${dir}`);
-  if (cliOptions.initialize) {
+  const initializerWasProtected =
+    initializerResult === "declined" ||
+    initializerResult === "permission-required";
+  if (cliOptions.initialize && !initializerWasProtected) {
     // remove addIcons method from component constructor
     await removeAddIcons(project, cliOptions);
   }

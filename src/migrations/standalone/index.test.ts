@@ -6,7 +6,12 @@ import {
   checkInstalledIonicVersion,
   isSupportedIonicVersion,
   migrateInitializerWithConsent,
+  runStandaloneMigration,
 } from ".";
+
+vi.mock("../../utils/package-utils", () => ({
+  getActualPackageVersion: vi.fn().mockResolvedValue("9.0.0"),
+}));
 
 const createLegacyInitializer = () => {
   const project = new Project({ useInMemoryFileSystem: true });
@@ -29,6 +34,33 @@ const migrationOptions = {
   projectPath: cwd(),
   interactive: false,
   initialize: false,
+};
+
+const createRunFixture = () => {
+  const project = new Project({ useInMemoryFileSystem: true });
+  const sourceFile = project.createSourceFile(
+    cwd() + "/src/main.ts",
+    dedent(`
+      import { addIcons } from "ionicons";
+      import * as allIcons from "ionicons/icons";
+      import * as useIcons from "use-icons";
+
+      addIcons(environment.production ? useIcons : allIcons);
+
+      class InlineApp {
+        constructor() {}
+      }
+    `),
+  );
+  const useIconsFile = project.createSourceFile(
+    cwd() + "/src/use-icons.ts",
+    'export { add } from "ionicons/icons";',
+  );
+  project.createSourceFile(
+    cwd() + "/src/example.html",
+    '<ion-icon name="heart"></ion-icon>',
+  );
+  return { project, sourceFile, useIconsFile };
 };
 
 describe("migrateInitializerWithConsent", () => {
@@ -71,6 +103,47 @@ describe("migrateInitializerWithConsent", () => {
 
     expect(result).toBe("permission-required");
     expect(sourceFile.getText()).toBe(before);
+  });
+});
+
+describe("runStandaloneMigration consent boundary", () => {
+  it("preserves the initializer after interactive No and still collects icons", async () => {
+    const { project, sourceFile, useIconsFile } = createRunFixture();
+    const before = sourceFile.getText();
+    const migrationSpinner = { start: vi.fn(), stop: vi.fn() } as Parameters<
+      typeof runStandaloneMigration
+    >[0]["spinner"];
+
+    await runStandaloneMigration({
+      project,
+      cliOptions: { ...migrationOptions, initialize: true },
+      dir: cwd(),
+      spinner: migrationSpinner,
+      confirmInitializerMigration: vi.fn().mockResolvedValue(false),
+    });
+
+    expect(sourceFile.getText()).toBe(before);
+    expect(useIconsFile.getText()).toContain("heart");
+    expect(migrationSpinner.stop).toHaveBeenCalledOnce();
+  });
+
+  it("preserves the initializer without non-interactive consent and still collects icons", async () => {
+    const { project, sourceFile, useIconsFile } = createRunFixture();
+    const before = sourceFile.getText();
+    const migrationSpinner = { start: vi.fn(), stop: vi.fn() } as Parameters<
+      typeof runStandaloneMigration
+    >[0]["spinner"];
+
+    await runStandaloneMigration({
+      project,
+      cliOptions: { ...migrationOptions, initialize: true },
+      dir: cwd(),
+      spinner: migrationSpinner,
+    });
+
+    expect(sourceFile.getText()).toBe(before);
+    expect(useIconsFile.getText()).toContain("heart");
+    expect(migrationSpinner.stop).toHaveBeenCalledOnce();
   });
 });
 

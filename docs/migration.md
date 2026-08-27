@@ -23,9 +23,13 @@ dependency graph tree-shakeable.
 First update the package, then run the collector in an interactive terminal:
 
 ```bash
-npm install @rdlabo/ionic-angular-collect-icons@latest
+npm install --save-dev @rdlabo/ionic-angular-collect-icons@latest
 npx @rdlabo/ionic-angular-collect-icons
 ```
+
+Build environments must install development dependencies because the generated
+application code imports the browser runtime while compiling. The runtime is
+then bundled into the application output.
 
 When it detects this generated initializer, the CLI asks whether to migrate it.
 **Yes** is selected by default. Selecting **No** leaves the initializer
