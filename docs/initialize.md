@@ -1,8 +1,12 @@
-Install the CLI and wire `addIcons`. See also [Usage](./usage.md).
+Install the CLI and wire icon registration. See also [Usage](./usage.md).
 
 ```bash
-npm install @rdlabo/ionic-angular-collect-icons --save-dev
+npm install --save-dev @rdlabo/ionic-angular-collect-icons
 ```
+
+The generated application code imports the package's browser runtime, so build
+environments must install development dependencies before compiling the
+application. The runtime is then bundled into the application output.
 
 ### 🤖 Automatic Configuration
 
@@ -23,16 +27,26 @@ This will generate `src/use-icons.ts`.
 #### 2. Import the generated file in your `main.ts` ( or `app.config.ts` ) file:
 
 ```diff
-+ import { addIcons } from 'ionicons';
-+ import * as allIcons from 'ionicons/icons';
++ import { initializeIonicons } from '@rdlabo/ionic-angular-collect-icons/runtime';
 + import * as useIcons from './use-icons';
 
   if (environment.production) {
     enableProdMode();
   }
 
-+  addIcons(environment.production ? useIcons : allIcons);
++  void initializeIonicons(useIcons);
 ```
+
+`initializeIonicons` registers the collected icons synchronously. In Angular
+development builds it then loads the complete Ionicons catalog; Angular removes
+that development-only import from optimized production builds.
+
+When an interactive collector run detects the ternary initializer emitted by
+older releases, it asks whether to migrate it. The default answer is **Yes**.
+Selecting **No** leaves the initializer unchanged. Existing custom
+`addIcons(...)` calls are also left unchanged. See
+[Migration](./migration.md#upgrade-the-icon-initializer) for preview,
+non-interactive, and matching details.
 
 #### 3. Remove other `addIcons` calls in class constructor
 
