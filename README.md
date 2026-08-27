@@ -35,7 +35,7 @@ After [Installation](#installation), initialize `addIcons` and collect icons bef
 npx @rdlabo/ionic-angular-collect-icons --initialize true
 ```
 
-Details: [Initialize](./docs/initialize.md) and [Usage](./docs/usage.md).
+Details: [Initialize](https://docs.rdlabo.dev/projects/ionic-angular-collect-icons/docs/initialize) and [Usage](https://docs.rdlabo.dev/projects/ionic-angular-collect-icons/docs/usage).
 
 ## Migrating from Ionic Angular 8
 
@@ -48,7 +48,7 @@ npx @ionic/migrate
 
 It applies safe automatic changes and reports items that require manual review.
 After it finishes, update this package and follow the
-[Ionic Angular 9 migration guide](./docs/migration.md) for the remaining checks.
+[Ionic Angular 9 migration guide](https://docs.rdlabo.dev/projects/ionic-angular-collect-icons/docs/migration) for the remaining checks.
 
 ## Installation
 
@@ -64,13 +64,13 @@ the same Angular template parser major as the consuming project.
 
 ## Documentation
 
-Start with [Installation](#installation), then [Initialize](./docs/initialize.md) and [Usage](./docs/usage.md).
+Start with [Installation](#installation), then [Initialize](https://docs.rdlabo.dev/projects/ionic-angular-collect-icons/docs/initialize) and [Usage](https://docs.rdlabo.dev/projects/ionic-angular-collect-icons/docs/usage).
 
-- [Initialize](./docs/initialize.md) — wire `addIcons` automatically or by hand.
-- [Usage](./docs/usage.md) — run the collector before production builds.
-- [Migration](./docs/migration.md) — migrate an existing project to Ionic Angular 9.
-- [CLI Options](./docs/options.md) — `--dry-run`, `--initialize`, paths.
-- [FAQ](./docs/faq.md) — tests, binding, and `main.ts`.
+- [Initialize](https://docs.rdlabo.dev/projects/ionic-angular-collect-icons/docs/initialize) — wire `addIcons` automatically or by hand.
+- [Usage](https://docs.rdlabo.dev/projects/ionic-angular-collect-icons/docs/usage) — run the collector before production builds.
+- [Migration](https://docs.rdlabo.dev/projects/ionic-angular-collect-icons/docs/migration) — migrate an existing project to Ionic Angular 9.
+- [CLI Options](https://docs.rdlabo.dev/projects/ionic-angular-collect-icons/docs/options) — `--dry-run`, `--initialize`, paths.
+- [FAQ](https://docs.rdlabo.dev/projects/ionic-angular-collect-icons/docs/faq) — tests, binding, and `main.ts`.
 
 <!-- rdlabo-docs-omit -->
 
