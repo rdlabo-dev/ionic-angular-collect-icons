@@ -6,7 +6,8 @@ export type IoniconDictionary = Parameters<typeof addIcons>[0];
 
 /**
  * Registers the collected icons synchronously and supplements them with the
- * complete Ionicons catalog only in Angular development builds.
+ * complete Ionicons catalog in Angular development builds. If `ngDevMode` is
+ * unavailable, it conservatively falls back to the development behavior.
  *
  * Angular's production optimizer removes the `ngDevMode` branch, so
  * `ionicons/icons` is not part of the production dependency graph.

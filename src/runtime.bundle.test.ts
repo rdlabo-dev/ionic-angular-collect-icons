@@ -1,5 +1,22 @@
-import { build } from "esbuild";
+import { build, type Metafile } from "esbuild";
 import { describe, expect, it } from "vitest";
+
+const IONICONS_CATALOG_ENTRY = /(?:^|\/)ionicons\/icons\/index\.[cm]?js$/;
+
+const getIoniconsCatalogBytes = (metafile: Metafile): number =>
+  Object.values(metafile.outputs).reduce(
+    (outputTotal, output) =>
+      outputTotal +
+      Object.entries(output.inputs).reduce(
+        (inputTotal, [inputPath, input]) =>
+          inputTotal +
+          (IONICONS_CATALOG_ENTRY.test(inputPath.replaceAll("\\", "/"))
+            ? input.bytesInOutput
+            : 0),
+        0,
+      ),
+    0,
+  );
 
 const bundleRuntime = async (ngDevMode: boolean) =>
   build({
@@ -32,13 +49,7 @@ describe("initializeIonicons production bundle", () => {
       (total, output) => total + output.contents.byteLength,
       0,
     );
-    const catalogBytes = Object.values(production.metafile.outputs).reduce(
-      (total, output) =>
-        total +
-        (output.inputs["node_modules/ionicons/icons/index.mjs"]
-          ?.bytesInOutput ?? 0),
-      0,
-    );
+    const catalogBytes = getIoniconsCatalogBytes(production.metafile);
 
     expect(totalBytes).toBeLessThan(100_000);
     expect(catalogBytes).toBeLessThan(10_000);
@@ -50,13 +61,7 @@ describe("initializeIonicons production bundle", () => {
       (total, output) => total + output.contents.byteLength,
       0,
     );
-    const catalogBytes = Object.values(development.metafile.outputs).reduce(
-      (total, output) =>
-        total +
-        (output.inputs["node_modules/ionicons/icons/index.mjs"]
-          ?.bytesInOutput ?? 0),
-      0,
-    );
+    const catalogBytes = getIoniconsCatalogBytes(development.metafile);
 
     expect(development.outputFiles.length).toBeGreaterThan(1);
     expect(totalBytes).toBeGreaterThan(500_000);
