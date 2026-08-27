@@ -132,7 +132,7 @@ After the official migration finishes, update this collector and confirm that
 the resulting dependency versions meet the requirements above:
 
 ```bash
-npm install @rdlabo/ionic-angular-collect-icons@latest
+npm install --save-dev @rdlabo/ionic-angular-collect-icons@latest
 ```
 
 The remaining sections explain the important Ionic Angular 9 changes to verify
