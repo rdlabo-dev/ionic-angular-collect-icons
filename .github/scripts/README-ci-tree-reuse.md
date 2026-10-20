@@ -19,7 +19,7 @@ own work. Deployment builds still run when their output is needed. CI result
 reuse preserves the prior observation; it does not claim to test new external
 services, dependencies or runner images. Request fresh CI when needed.
 
-Run `node --test .github/scripts/ci-tree-reuse.test.mjs` and actionlint on modified
+Run `node --test .github/scripts/ci-tree-reuse.node-test.mjs` and actionlint on modified
 workflows when changing this logic. The regression tests protect against stale
 successes and bypassed failure gates.
 

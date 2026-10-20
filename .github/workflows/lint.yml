@@ -43,7 +43,7 @@ jobs:
         with:
           persist-credentials: false
       - name: Test CI reuse guards
-        run: node --test .github/scripts/ci-tree-reuse.test.mjs
+        run: node --test .github/scripts/ci-tree-reuse.node-test.mjs
       - name: Record the actual complete checkout
         id: tree
         uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd
